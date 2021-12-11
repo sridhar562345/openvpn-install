@@ -361,6 +361,7 @@ group $group_name
 persist-key
 persist-tun
 verb 3
+duplicate-cn
 auth-user-pass-verify openvpn_authentication.py via-file
 script-security 2
 crl-verify crl.pem" >> /etc/openvpn/server/server.conf
