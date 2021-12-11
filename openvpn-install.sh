@@ -268,8 +268,9 @@ ssbzSibBsu/6iGtCOGEoXJf//////////wIBAg==
 	echo """
 #!/usr/bin/env python3
 
-import json
 import sys
+import sqlite3
+DB_FILE = 'openvpn_dashboard/db.sqlite3'
 
 
 def main():
@@ -278,19 +279,26 @@ def main():
         username = tmpfile.readline().rstrip('\n')
         password = tmpfile.readline().rstrip('\n')
 
-    with open('user_passwords.json', 'r') as file:
-        users_list = json.loads(file.read())
-
-    if username not in users_list:
-        print(f'>>  user {username} not defined.')
+    creds = get_password(username)
+    if not creds:
+        print(f'>> user {username} not defined.')
         sys.exit(2)
 
     # Verify password.
-    if password != users_list[username]:
+    if password != creds[0][1]:
         print(f'>> Bad password provided by user {username}.')
         sys.exit(3)
 
     sys.exit(0)
+
+
+def get_password(username):
+    db = sqlite3.connect(DB_FILE)
+    cursor = db.cursor()
+    cursor.execute('''select username, password from openvpn_openvpnuser where username=?''', (username,))
+    creds = cursor.fetchall()
+    db.close()
+    return creds
 
 
 if __name__ == '__main__':
