@@ -264,6 +264,39 @@ YdEIqUuyyOP7uWrat2DX9GgdT0Kj3jlN9K5W7edjcrsZCwenyO4KbXCeAvzhzffi
 7MA0BM0oNC9hkXL+nOmFg/+OTxIy7vKBg8P+OxtMb61zO7X8vC7CIAXFjvGDfRaD
 ssbzSibBsu/6iGtCOGEoXJf//////////wIBAg==
 -----END DH PARAMETERS-----' > /etc/openvpn/server/dh.pem
+	# Generate openvpn_authentication.py
+	echo """
+#!/usr/bin/env python3
+
+import json
+import sys
+
+
+def main():
+    # First arg is a tmp file with 2 lines: username and password
+    with open(sys.argv[1], 'r') as tmpfile:
+        username = tmpfile.readline().rstrip('\n')
+        password = tmpfile.readline().rstrip('\n')
+
+    with open('user_passwords.json', 'r') as file:
+        users_list = json.loads(file.read())
+
+    if username not in users_list:
+        print(f'>>  user {username} not defined.')
+        sys.exit(2)
+
+    # Verify password.
+    if password != users_list[username]:
+        print(f'>> Bad password provided by user {username}.')
+        sys.exit(3)
+
+    sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()
+""" > /etc/openvpn/server/openvpn_authentication.py
+	chown nobody:"$group_name" /etc/openvpn/server/openvpn_authentication.py
 	# Generate server.conf
 	echo "local $ip
 port $port
