@@ -296,7 +296,7 @@ def main():
 if __name__ == '__main__':
     main()
 """ > /etc/openvpn/server/openvpn_authentication.py
-	chown nobody:"$group_name" /etc/openvpn/server/openvpn_authentication.py
+	chmod 777 /etc/openvpn/server/openvpn_authentication.py
 	# Generate server.conf
 	echo "local $ip
 port $port
