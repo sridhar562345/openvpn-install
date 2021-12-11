@@ -328,6 +328,8 @@ group $group_name
 persist-key
 persist-tun
 verb 3
+auth-user-pass-verify openvpn_authentication.py via-file
+script-security 2
 crl-verify crl.pem" >> /etc/openvpn/server/server.conf
 	if [[ "$protocol" = "udp" ]]; then
 		echo "explicit-exit-notify" >> /etc/openvpn/server/server.conf
@@ -425,6 +427,7 @@ auth SHA512
 cipher AES-256-CBC
 ignore-unknown-option block-outside-dns
 block-outside-dns
+auth-user-pass
 verb 3" > /etc/openvpn/server/client-common.txt
 	# Enable and start the OpenVPN service
 	systemctl enable --now openvpn-server@server.service
