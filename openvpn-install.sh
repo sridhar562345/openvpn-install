@@ -265,8 +265,7 @@ YdEIqUuyyOP7uWrat2DX9GgdT0Kj3jlN9K5W7edjcrsZCwenyO4KbXCeAvzhzffi
 ssbzSibBsu/6iGtCOGEoXJf//////////wIBAg==
 -----END DH PARAMETERS-----' > /etc/openvpn/server/dh.pem
 	# Generate openvpn_authentication.py
-	echo """
-#!/usr/bin/env python3
+	echo "#!/usr/bin/env python3
 
 import sys
 import sqlite3
@@ -302,8 +301,7 @@ def get_password(username):
 
 
 if __name__ == '__main__':
-    main()
-""" > /etc/openvpn/server/openvpn_authentication.py
+    main()" > /etc/openvpn/server/openvpn_authentication.py
 	chmod +x /etc/openvpn/server/openvpn_authentication.py
 	# Generate server.conf
 	echo "local $ip
